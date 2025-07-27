@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "shipments": {
+      ".indexOn": ["shipmentNumber"]
+    },
+    "clients": {
+      ".indexOn": ["name"]
+    },
+    "transports": {
+      ".indexOn": ["name"]
+    }
+  }
+}

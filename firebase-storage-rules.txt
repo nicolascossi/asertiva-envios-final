@@ -1,0 +1,10 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /shipments/{shipmentNumber}/{fileName} {
+      allow read: if true;  // Permitir lectura pública de archivos
+      allow write: if request.auth != null ||  // Permitir escritura si el usuario está autenticado
+                  request.resource.size < 5 * 1024 * 1024; // O si el archivo es menor a 5MB
+    }
+  }
+}

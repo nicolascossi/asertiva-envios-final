@@ -863,7 +863,7 @@ export default function EnviosPorFechaPage() {
       // Preparar los datos para enviar al endpoint
       const emailData = {
         to: [
-          "ventas@asertiva.com.ar",
+          "administracion@asertiva.com.ar",
 "equipo@asertiva.com.ar",
 "soporte@asertiva.com.ar",
 "deposito@asertiva.com.ar",

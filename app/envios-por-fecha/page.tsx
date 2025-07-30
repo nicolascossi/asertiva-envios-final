@@ -554,7 +554,7 @@ export default function EnviosPorFechaPage() {
 
       // Cargar el logo de Asertiva
       const logoUrl =
-        "https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
+        "https://sinergiadesarrollos.com/LOGOASERTIVA.png"
 
       // Función para añadir el logo y encabezado a cada página
       const addHeaderToPage = (doc) => {

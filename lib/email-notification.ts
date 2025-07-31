@@ -72,7 +72,7 @@ export async function sendEmailNotification(shipment: Shipment): Promise<any> {
               </ul>
             </div>
             <p>Para más detalles o consultas sobre su envío, por favor escanee el código QR en la etiqueta del envío o contáctenos directamente.</p>
-            <p>Gracias por confiar en Equipo Asertiva.</p>
+            <p>Gracias por confiar en Asertiva.</p>
             <div class="footer">
               <p>Este es un mensaje automático, por favor no responda a este correo.</p>
               <p>Si necesita asistencia, contáctenos a través de nuestros canales oficiales de atención al cliente.</p>

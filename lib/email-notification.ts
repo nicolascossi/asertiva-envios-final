@@ -31,7 +31,7 @@ export async function sendEmailNotification(shipment: Shipment): Promise<any> {
 
   const emailData: any = {
     sender: {
-      name: "Equipo Asertiva",
+      name: "Asertiva",
       email: SENDER_EMAIL,
     },
     to: [

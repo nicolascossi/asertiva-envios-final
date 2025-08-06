@@ -116,8 +116,8 @@ export default function ShipmentLabel({
               />
               <div>
                 <h2 className="text-lg font-bold leading-tight">ASERTIVA S.A.</h2>
-                <p className="text-sm text-gray-600 leading-tight">Vicente Lopez 749, Bahía Blanca</p>
-                <p className="text-sm text-gray-600 leading-tight">Tel: 291-4521744</p>
+                <p className="text-sm text-gray-600 leading-tight">Av. Colon 1450, Bahía Blanca</p>
+                <p className="text-sm text-gray-600 leading-tight">Ce. Dep.: +54 9 291-412-1426</p>
               </div>
             </div>
             <div className="text-right">

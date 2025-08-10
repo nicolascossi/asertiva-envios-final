@@ -202,18 +202,19 @@ function ShipmentList({
             <TableHeader>
               <TableRow>
                 {/* Eliminamos la columna de número de envío */}
-                <TableHead className="w-[7%] text-xs">Fecha</TableHead>
-                <TableHead className="w-[6%] text-xs">Código</TableHead>
-                <TableHead className="w-[13%] text-xs">Cliente</TableHead>
-                <TableHead className="w-[11%] text-xs">Transporte</TableHead>
-                <TableHead className="w-[7%] text-xs">Pallets/Bultos</TableHead>
-                <TableHead className="w-[5%] text-xs">Peso</TableHead>
-                <TableHead className="w-[6%] text-xs">$ Valor</TableHead>
-                <TableHead className="w-[6%] text-xs">$ Envío</TableHead>
-                <TableHead className="w-[11%] text-xs">Factura</TableHead>
-                <TableHead className="w-[11%] text-xs">Remito</TableHead>
-                <TableHead className="w-[5%] text-xs">Estado</TableHead>
-                {showRemitoTriplicado && <TableHead className="w-[9%] text-xs">Remito Trip.</TableHead>}
+                <TableHead className="w-[6%] text-xs">Fecha</TableHead>
+                <TableHead className="w-[5%] text-xs">Código</TableHead>
+                <TableHead className="w-[11%] text-xs">Cliente</TableHead>
+                <TableHead className="w-[9%] text-xs">Transporte</TableHead>
+                <TableHead className="w-[6%] text-xs">Pallets/Bultos</TableHead>
+                <TableHead className="w-[4%] text-xs">Peso</TableHead>
+                <TableHead className="w-[5%] text-xs">$ Valor</TableHead>
+                <TableHead className="w-[5%] text-xs">$ Envío</TableHead>
+                <TableHead className="w-[9%] text-xs">Factura</TableHead>
+                <TableHead className="w-[9%] text-xs">Remito</TableHead>
+                <TableHead className="w-[10%] text-xs">Nota Entrega</TableHead>
+                <TableHead className="w-[4%] text-xs">Estado</TableHead>
+                {showRemitoTriplicado && <TableHead className="w-[8%] text-xs">Remito Trip.</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -246,6 +247,9 @@ function ShipmentList({
                     </TableCell>
                     <TableCell className="text-xs whitespace-normal break-words">
                       {highlightText(shipment.remitNumber || "-", searchTerm)}
+                    </TableCell>
+                    <TableCell className="text-xs truncate" title={shipment.deliveryNote || "Sin nota"}>
+                      {highlightText(shipment.deliveryNote || "Sin nota", searchTerm)}
                     </TableCell>
                     <TableCell>
                       <Badge variant={shipment.status === "sent" ? "default" : "secondary"} className="text-xs">
@@ -552,9 +556,9 @@ export default function EnviosPorFechaPage() {
         format: "a4",
       })
 
-      // Cargar el logo de Asertiva
+      // Cargar el logo de Gemico
       const logoUrl =
-        "https://sinergiadesarrollos.com/LOGOASERTIVA.png"
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Gemico-uBE9D9uAFAorAj3wQ1JCsUhsu6oZwO.png"
 
       // Función para añadir el logo y encabezado a cada página
       const addHeaderToPage = (doc) => {
@@ -591,6 +595,7 @@ export default function EnviosPorFechaPage() {
         "$ " + (shipment.shippingCost ? safeFormatNumber(shipment.shippingCost) : "0.00"), // Nuevo campo
         shipment.invoiceNumber || "-", // Add invoice number
         shipment.remitNumber || "-",
+        shipment.deliveryNote || "Sin nota", // Nueva columna para nota de entrega
         shipment.status === "sent" ? "ENVIADO" : "PENDIENTE", // Estado en MAYÚSCULAS
         shipment.remitoTriplicado ? "Recibido" : "Pendiente", // Remito Triplicado con primera letra mayúscula
         shipment.notes || "-",
@@ -609,6 +614,7 @@ export default function EnviosPorFechaPage() {
         "Costo Envío", // Nueva columna
         "Factura",
         "Remito",
+        "Nota Entrega", // Nueva columna
         "Estado",
         "Remito Triplicado", // Nueva columna
         "Observaciones",
@@ -618,7 +624,7 @@ export default function EnviosPorFechaPage() {
       const pageWidth = doc.internal.pageSize.getWidth()
 
       // Calcular el ancho total de la tabla (suma de todos los anchos de columna)
-      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 22 + 30
+      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 20 + 18 + 22 + 30
 
       // Calcular los márgenes laterales para centrar la tabla
       const leftMargin = (pageWidth - totalTableWidth) / 2
@@ -646,9 +652,10 @@ export default function EnviosPorFechaPage() {
           8: { cellWidth: 18 }, // Costo Envío
           9: { cellWidth: 18 }, // Factura
           10: { cellWidth: 18 }, // Remito
-          11: { cellWidth: 18 }, // Estado
-          12: { cellWidth: 22 }, // Remito Triplicado
-          13: { cellWidth: 30 }, // Observaciones
+          11: { cellWidth: 20 }, // Nota Entrega
+          12: { cellWidth: 18 }, // Estado
+          13: { cellWidth: 22 }, // Remito Triplicado
+          14: { cellWidth: 30 }, // Observaciones
         },
         margin: {
           top: 30,
@@ -727,9 +734,9 @@ export default function EnviosPorFechaPage() {
         format: "a4",
       })
 
-      // Cargar el logo de Asertiva
+      // Cargar el logo de Gemico
       const logoUrl =
-        "https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Gemico-uBE9D9uAFAorAj3wQ1JCsUhsu6oZwO.png"
 
       // Función para añadir el logo y encabezado a cada página
       const addHeaderToPage = (doc) => {
@@ -766,6 +773,7 @@ export default function EnviosPorFechaPage() {
         "$ " + (shipment.shippingCost ? safeFormatNumber(shipment.shippingCost) : "0.00"), // Nuevo campo
         shipment.invoiceNumber || "-", // Add invoice number
         shipment.remitNumber || "-",
+        shipment.deliveryNote || "Sin nota", // Nueva columna para nota de entrega
         shipment.status === "sent" ? "ENVIADO" : "PENDIENTE", // Estado en MAYÚSCULAS
         shipment.remitoTriplicado ? "Recibido" : "Pendiente", // Remito Triplicado con primera letra mayúscula
         shipment.notes || "-",
@@ -784,6 +792,7 @@ export default function EnviosPorFechaPage() {
         "Costo Envío", // Nueva columna
         "Factura",
         "Remito",
+        "Nota Entrega", // Nueva columna
         "Estado",
         "Remito Triplicado", // Nueva columna
         "Observaciones",
@@ -793,7 +802,7 @@ export default function EnviosPorFechaPage() {
       const pageWidth = doc.internal.pageSize.getWidth()
 
       // Calcular el ancho total de la tabla (suma de todos los anchos de columna)
-      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 18 + 22 + 30
+      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 20 + 18 + 22 + 30
 
       // Calcular los márgenes laterales para centrar la tabla
       const leftMargin = (pageWidth - totalTableWidth) / 2
@@ -821,9 +830,10 @@ export default function EnviosPorFechaPage() {
           8: { cellWidth: 18 }, // Costo Envío
           9: { cellWidth: 18 }, // Factura
           10: { cellWidth: 18 }, // Remito
-          11: { cellWidth: 18 }, // Estado
-          12: { cellWidth: 22 }, // Remito Triplicado
-          13: { cellWidth: 30 }, // Observaciones
+          11: { cellWidth: 20 }, // Nota Entrega
+          12: { cellWidth: 18 }, // Estado
+          13: { cellWidth: 22 }, // Remito Triplicado
+          14: { cellWidth: 30 }, // Observaciones
         },
         margin: {
           top: 30,
@@ -863,17 +873,17 @@ export default function EnviosPorFechaPage() {
       // Preparar los datos para enviar al endpoint
       const emailData = {
         to: [
-          "administracion@asertiva.com.ar",
-"equipo@asertiva.com.ar",
-"soporte@asertiva.com.ar",
-"deposito@asertiva.com.ar",
+          "ventas@gemico.com.ar",
+          "equipo@gemico.com.ar",
+          "soporte@gemico.com.ar",
+          "deposito@gemico.com.ar",
           "nicolasmartincossi@gmail.com",
         ],
         subject: emailSubject,
         html: `
           <h2>Plantilla de Envíos</h2>
           <p>${emailBodyText}</p>
-          <p>Este correo ha sido generado automáticamente desde el sistema de gestión de envíos de Asertiva.</p>
+          <p>Este correo ha sido generado automáticamente desde el sistema de gestión de envíos de Gemico.</p>
         `,
         pdfBase64: pdfBase64,
         pdfFilename:
@@ -945,6 +955,7 @@ export default function EnviosPorFechaPage() {
         "Costo de Envío ($)": shipment.shippingCost ? "$ " + Number(shipment.shippingCost).toFixed(2) : "$ 0.00", // Nuevo campo
         Factura: shipment.invoiceNumber || "-",
         Remito: shipment.remitNumber || "-",
+        "Nota de Entrega": shipment.deliveryNote || "Sin nota", // Nueva columna
         // Estado en MAYÚSCULAS
         Estado: shipment.status === "sent" ? "ENVIADO" : "PENDIENTE",
         // Remito Triplicado con primera letra mayúscula
@@ -973,7 +984,7 @@ export default function EnviosPorFechaPage() {
       // Ajustar anchos específicos para algunas columnas
       ws["!cols"][3] = { wch: 20 } // Cliente
       ws["!cols"][4] = { wch: 20 } // Transporte
-      ws["!cols"][13] = { wch: 25 } // Observaciones
+      ws["!cols"][14] = { wch: 25 } // Observaciones
 
       // Si no existe la propiedad !rows, crearla
       if (!ws["!rows"]) ws["!rows"] = []
@@ -1040,6 +1051,11 @@ export default function EnviosPorFechaPage() {
 
       // Buscar en número de remito
       if (shipment.remitNumber && shipment.remitNumber.toLowerCase().includes(searchTermLower)) {
+        return true
+      }
+
+      // Buscar en nota de entrega
+      if (shipment.deliveryNote && shipment.deliveryNote.toLowerCase().includes(searchTermLower)) {
         return true
       }
 
@@ -1179,7 +1195,7 @@ export default function EnviosPorFechaPage() {
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             id="search-input"
-            placeholder="Buscar por cliente, transporte, factura, remito..."
+            placeholder="Buscar por cliente, transporte, factura, remito, nota entrega..."
             className="pl-8 pr-10"
             defaultValue={searchTerm}
             onChange={handleSearchChange}

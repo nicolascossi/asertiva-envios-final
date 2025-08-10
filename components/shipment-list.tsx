@@ -301,7 +301,8 @@ export default function ShipmentList({
       shipment.client?.toLowerCase().includes(searchLower) ||
       shipment.transport?.toLowerCase().includes(searchLower) ||
       shipment.shipmentNumber?.toLowerCase().includes(searchLower) ||
-      (shipment.clientCode && shipment.clientCode.toLowerCase().includes(searchLower))
+      (shipment.clientCode && shipment.clientCode.toLowerCase().includes(searchLower)) ||
+      (shipment.deliveryNote && shipment.deliveryNote.toLowerCase().includes(searchLower))
     )
   })
 
@@ -311,7 +312,7 @@ export default function ShipmentList({
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por cliente, transporte, número de envío o código de cliente..."
+            placeholder="Buscar por cliente, transporte, número de envío, código de cliente o nota de entrega..."
             className="pl-8"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -336,19 +337,20 @@ export default function ShipmentList({
             <Table className="w-full table-fixed">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[7%] text-xs">Nº Envío</TableHead>
-                  <TableHead className="w-[7%] text-xs">Fecha</TableHead>
-                  <TableHead className="w-[6%] text-xs">Código</TableHead>
-                  <TableHead className="w-[14%] text-xs">Cliente</TableHead>
-                  <TableHead className="w-[12%] text-xs">Transporte</TableHead>
-                  <TableHead className="w-[10%] text-xs">Pallets/Bultos</TableHead>
-                  <TableHead className="w-[7%] text-xs">Peso (kg)</TableHead>
-                  <TableHead className="w-[7%] text-xs">$ Valor</TableHead>
-                  <TableHead className="w-[7%] text-xs">Factura</TableHead>
-                  <TableHead className="w-[7%] text-xs">Remito</TableHead>
-                  <TableHead className="w-[6%] text-xs">Estado</TableHead>
-                  {showRemitoTriplicado && <TableHead className="w-[8%] text-xs">Remito Trip.</TableHead>}
-                  <TableHead className="text-right w-[7%] text-xs">Acciones</TableHead>
+                  <TableHead className="w-[6%] text-xs">Nº Envío</TableHead>
+                  <TableHead className="w-[6%] text-xs">Fecha</TableHead>
+                  <TableHead className="w-[5%] text-xs">Código</TableHead>
+                  <TableHead className="w-[12%] text-xs">Cliente</TableHead>
+                  <TableHead className="w-[10%] text-xs">Transporte</TableHead>
+                  <TableHead className="w-[8%] text-xs">Pallets/Bultos</TableHead>
+                  <TableHead className="w-[6%] text-xs">Peso (kg)</TableHead>
+                  <TableHead className="w-[6%] text-xs">$ Valor</TableHead>
+                  <TableHead className="w-[6%] text-xs">Factura</TableHead>
+                  <TableHead className="w-[6%] text-xs">Remito</TableHead>
+                  <TableHead className="w-[10%] text-xs">Nota Entrega</TableHead>
+                  <TableHead className="w-[5%] text-xs">Estado</TableHead>
+                  {showRemitoTriplicado && <TableHead className="w-[7%] text-xs">Remito Trip.</TableHead>}
+                  <TableHead className="text-right w-[6%] text-xs">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -377,6 +379,9 @@ export default function ShipmentList({
                     </TableCell>
                     <TableCell className="text-xs truncate">{shipment.invoiceNumber || "-"}</TableCell>
                     <TableCell className="text-xs truncate">{shipment.remitNumber || "-"}</TableCell>
+                    <TableCell className="text-xs truncate" title={shipment.deliveryNote || "Sin nota"}>
+                      {shipment.deliveryNote || "Sin nota"}
+                    </TableCell>
                     <TableCell>
                       <Badge variant={shipment.status === "sent" ? "default" : "secondary"} className="text-xs">
                         {shipment.status === "sent" ? "Enviado" : "Pendiente"}

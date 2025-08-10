@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect, useCallback } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -37,6 +39,40 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
   const [transports, setTransports] = useState<any[]>([])
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [selectedAddress, setSelectedAddress] = useState<ClientAddress | null>(null)
+
+  // Función para manejar navegación con teclado en selects
+  const handleSelectKeyDown = (
+    e: React.KeyboardEvent,
+    options: any[],
+    currentValue: any,
+    onChange: (value: any) => void,
+  ) => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault()
+      const currentIndex = options.findIndex(
+        (option) =>
+          option.value === currentValue ||
+          option.id === currentValue ||
+          option.name === currentValue ||
+          option === currentValue,
+      )
+      let newIndex
+
+      if (e.key === "ArrowUp") {
+        newIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1
+      } else {
+        newIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0
+      }
+
+      const newValue = options[newIndex]
+      if (newValue) {
+        if (newValue.value) onChange(newValue.value)
+        else if (newValue.id) onChange(newValue.id)
+        else if (newValue.name) onChange(newValue.name)
+        else onChange(newValue)
+      }
+    }
+  }
 
   useEffect(() => {
     // Parse existing remitNumber if it exists
@@ -403,8 +439,8 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader className="flex flex-col items-center space-y-4">
           <Image
-            src="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
-            alt="Asertiva Logo"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Gemico-uBE9D9uAFAorAj3wQ1JCsUhsu6oZwO.png"
+            alt="Gemico Logo"
             width={120}
             height={60}
             className="object-contain"
@@ -463,7 +499,11 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
                   onValueChange={handleAddressChange}
                   disabled={!selectedClient || selectedClient.addresses.length === 0}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    onKeyDown={(e) =>
+                      handleSelectKeyDown(e, selectedClient.addresses, selectedAddress?.id, handleAddressChange)
+                    }
+                  >
                     <SelectValue placeholder="Seleccionar dirección" />
                   </SelectTrigger>
                   <SelectContent>
@@ -497,7 +537,19 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               <Label htmlFor="transport">Transporte</Label>
               {isEditing ? (
                 <Select value={editedShipment.transport} onValueChange={handleTransportChange}>
-                  <SelectTrigger>
+                  <SelectTrigger
+                    onKeyDown={(e) =>
+                      handleSelectKeyDown(
+                        e,
+                        transports.map((t) => ({
+                          name: t.name || `transport-${t.id}`,
+                          value: t.name || `transport-${t.id}`,
+                        })),
+                        editedShipment.transport,
+                        handleTransportChange,
+                      )
+                    }
+                  >
                     <SelectValue placeholder="Seleccionar transporte" />
                   </SelectTrigger>
                   <SelectContent>
@@ -631,7 +683,16 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               <Label htmlFor="status">Estado</Label>
               {isEditing ? (
                 <Select value={editedShipment.status} onValueChange={(value) => handleChange("status", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger
+                    onKeyDown={(e) =>
+                      handleSelectKeyDown(
+                        e,
+                        [{ value: "pending" }, { value: "sent" }],
+                        editedShipment.status,
+                        (value) => handleChange("status", value),
+                      )
+                    }
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -652,7 +713,14 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
             {isEditing ? (
               <div className="flex gap-2">
                 <Select value={invoiceType} onValueChange={(value) => setInvoiceType(value as "A" | "B" | "E")}>
-                  <SelectTrigger className="w-20">
+                  <SelectTrigger
+                    className="w-20"
+                    onKeyDown={(e) =>
+                      handleSelectKeyDown(e, [{ value: "A" }, { value: "B" }, { value: "E" }], invoiceType, (value) =>
+                        setInvoiceType(value as "A" | "B" | "E"),
+                      )
+                    }
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -679,7 +747,14 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
             {isEditing ? (
               <div className="flex gap-2">
                 <Select value={remitType} onValueChange={(value) => setRemitType(value as "R" | "X" | "RM")}>
-                  <SelectTrigger className="w-20">
+                  <SelectTrigger
+                    className="w-20"
+                    onKeyDown={(e) =>
+                      handleSelectKeyDown(e, [{ value: "R" }, { value: "X" }, { value: "RM" }], remitType, (value) =>
+                        setRemitType(value as "R" | "X" | "RM"),
+                      )
+                    }
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -698,6 +773,21 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               </div>
             ) : (
               <div className="p-2 border rounded-md bg-muted/30">{shipment.remitNumber}</div>
+            )}
+          </div>
+
+          {/* Campo de Nota de Entrega como input de texto */}
+          <div className="space-y-2">
+            <Label htmlFor="deliveryNote">Nota de Entrega</Label>
+            {isEditing ? (
+              <Input
+                id="deliveryNote"
+                placeholder="Ingrese el número de nota de entrega"
+                value={editedShipment.deliveryNote || ""}
+                onChange={(e) => handleChange("deliveryNote", e.target.value)}
+              />
+            ) : (
+              <div className="p-2 border rounded-md bg-muted/30">{shipment.deliveryNote || "Sin nota"}</div>
             )}
           </div>
 
@@ -801,6 +891,10 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               <h3 className="text-sm font-medium">Remito</h3>
               <p>{shipment.remitNumber || "No especificado"}</p>
             </div>
+            <div>
+              <h3 className="text-sm font-medium">Nota de Entrega</h3>
+              <p>{shipment.deliveryNote || "Sin nota"}</p>
+            </div>
           </div>
         )}
 
@@ -847,3 +941,4 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
     </Dialog>
   )
 }
+

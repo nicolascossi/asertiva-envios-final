@@ -107,7 +107,7 @@ export default function NewShipmentModal({
       if (remitType === "R") {
         setShipment((prev) => ({
           ...prev,
-          remitNumber: `${remitType} - 0003 - ${remitNumber}`,
+          remitNumber: `${remitType} - 0001 - ${remitNumber}`,
         }))
       } else if (remitType === "X") {
         setShipment((prev) => ({
@@ -133,11 +133,11 @@ export default function NewShipmentModal({
     if (invoiceNumber) {
       let prefix = ""
       if (invoiceType === "A") {
-        prefix = "A 00001-"
+        prefix = "A 00002-"
       } else if (invoiceType === "B") {
-        prefix = "B 00001-"
+        prefix = "B 00002-"
       } else if (invoiceType === "E") {
-        prefix = "E 00004-"
+        prefix = "E 00003-"
       }
 
       setShipment((prev) => ({

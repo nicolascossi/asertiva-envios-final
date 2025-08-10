@@ -46,6 +46,7 @@ export interface Shipment {
   createdAt?: string
   invoiceNumber: string
   remitNumber: string
+  deliveryNote: string // Campo para número de nota de entrega
   notes: string
   hasColdChain: boolean
   isUrgent: boolean

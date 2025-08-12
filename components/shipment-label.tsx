@@ -170,7 +170,7 @@ export default function ShipmentLabel({
 
               {shipment.deliveryNote && !shipment.remitNumber && (
                 <div>
-                  <p className="text-xs text-gray-600 mb-0">Nota de Entrega</p>
+                  <p className="text-xs text-gray-600 mb-0">Nota de Pedido</p>
                   <p className="text-sm font-semibold">{shipment.deliveryNote}</p>
                 </div>
               )}
@@ -178,7 +178,7 @@ export default function ShipmentLabel({
               {/* Nota de Entrega */}
               {shipment.deliveryNote && (
                 <div>
-                  <p className="text-xs text-gray-600 mb-0">Nota de Entrega</p>
+                  <p className="text-xs text-gray-600 mb-0">Nota de Pedido</p>
                   <p className="text-sm font-semibold">{shipment.deliveryNote}</p>
                 </div>
               )}

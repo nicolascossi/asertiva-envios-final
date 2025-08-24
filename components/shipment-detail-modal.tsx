@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect, useCallback } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -39,40 +37,6 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
   const [transports, setTransports] = useState<any[]>([])
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [selectedAddress, setSelectedAddress] = useState<ClientAddress | null>(null)
-
-  // Función para manejar navegación con teclado en selects
-  const handleSelectKeyDown = (
-    e: React.KeyboardEvent,
-    options: any[],
-    currentValue: any,
-    onChange: (value: any) => void,
-  ) => {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-      e.preventDefault()
-      const currentIndex = options.findIndex(
-        (option) =>
-          option.value === currentValue ||
-          option.id === currentValue ||
-          option.name === currentValue ||
-          option === currentValue,
-      )
-      let newIndex
-
-      if (e.key === "ArrowUp") {
-        newIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1
-      } else {
-        newIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0
-      }
-
-      const newValue = options[newIndex]
-      if (newValue) {
-        if (newValue.value) onChange(newValue.value)
-        else if (newValue.id) onChange(newValue.id)
-        else if (newValue.name) onChange(newValue.name)
-        else onChange(newValue)
-      }
-    }
-  }
 
   useEffect(() => {
     // Parse existing remitNumber if it exists
@@ -499,11 +463,7 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
                   onValueChange={handleAddressChange}
                   disabled={!selectedClient || selectedClient.addresses.length === 0}
                 >
-                  <SelectTrigger
-                    onKeyDown={(e) =>
-                      handleSelectKeyDown(e, selectedClient.addresses, selectedAddress?.id, handleAddressChange)
-                    }
-                  >
+                  <SelectTrigger>
                     <SelectValue placeholder="Seleccionar dirección" />
                   </SelectTrigger>
                   <SelectContent>
@@ -537,19 +497,7 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               <Label htmlFor="transport">Transporte</Label>
               {isEditing ? (
                 <Select value={editedShipment.transport} onValueChange={handleTransportChange}>
-                  <SelectTrigger
-                    onKeyDown={(e) =>
-                      handleSelectKeyDown(
-                        e,
-                        transports.map((t) => ({
-                          name: t.name || `transport-${t.id}`,
-                          value: t.name || `transport-${t.id}`,
-                        })),
-                        editedShipment.transport,
-                        handleTransportChange,
-                      )
-                    }
-                  >
+                  <SelectTrigger>
                     <SelectValue placeholder="Seleccionar transporte" />
                   </SelectTrigger>
                   <SelectContent>
@@ -683,16 +631,7 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               <Label htmlFor="status">Estado</Label>
               {isEditing ? (
                 <Select value={editedShipment.status} onValueChange={(value) => handleChange("status", value)}>
-                  <SelectTrigger
-                    onKeyDown={(e) =>
-                      handleSelectKeyDown(
-                        e,
-                        [{ value: "pending" }, { value: "sent" }],
-                        editedShipment.status,
-                        (value) => handleChange("status", value),
-                      )
-                    }
-                  >
+                  <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -713,14 +652,7 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
             {isEditing ? (
               <div className="flex gap-2">
                 <Select value={invoiceType} onValueChange={(value) => setInvoiceType(value as "A" | "B" | "E")}>
-                  <SelectTrigger
-                    className="w-20"
-                    onKeyDown={(e) =>
-                      handleSelectKeyDown(e, [{ value: "A" }, { value: "B" }, { value: "E" }], invoiceType, (value) =>
-                        setInvoiceType(value as "A" | "B" | "E"),
-                      )
-                    }
-                  >
+                  <SelectTrigger className="w-20">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -747,14 +679,7 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
             {isEditing ? (
               <div className="flex gap-2">
                 <Select value={remitType} onValueChange={(value) => setRemitType(value as "R" | "X" | "RM")}>
-                  <SelectTrigger
-                    className="w-20"
-                    onKeyDown={(e) =>
-                      handleSelectKeyDown(e, [{ value: "R" }, { value: "X" }, { value: "RM" }], remitType, (value) =>
-                        setRemitType(value as "R" | "X" | "RM"),
-                      )
-                    }
-                  >
+                  <SelectTrigger className="w-20">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -788,6 +713,21 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               />
             ) : (
               <div className="p-2 border rounded-md bg-muted/30">{shipment.deliveryNote || "Sin nota"}</div>
+            )}
+          </div>
+
+          {/* Campo de Nota de Pedido como input de texto */}
+          <div className="space-y-2">
+            <Label htmlFor="orderNote">Nota de Pedido</Label>
+            {isEditing ? (
+              <Input
+                id="orderNote"
+                placeholder="Ingrese el número de nota de pedido"
+                value={editedShipment.orderNote || ""}
+                onChange={(e) => handleChange("orderNote", e.target.value)}
+              />
+            ) : (
+              <div className="p-2 border rounded-md bg-muted/30">{shipment.orderNote || "Sin nota"}</div>
             )}
           </div>
 
@@ -895,6 +835,10 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
               <h3 className="text-sm font-medium">Nota de Entrega</h3>
               <p>{shipment.deliveryNote || "Sin nota"}</p>
             </div>
+            <div>
+              <h3 className="text-sm font-medium">Nota de Pedido</h3>
+              <p>{shipment.orderNote || "Sin nota"}</p>
+            </div>
           </div>
         )}
 
@@ -941,4 +885,3 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
     </Dialog>
   )
 }
-

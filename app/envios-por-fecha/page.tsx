@@ -21,6 +21,9 @@ import { toast, useToast } from "@/components/ui/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { debounce } from "lodash"
+import { jsPDF } from "jspdf"
+import autoTable from "jspdf-autotable"
+import XLSX from "xlsx"
 
 // Extended shipment type with client code
 interface ExtendedShipment extends Shipment {
@@ -85,7 +88,7 @@ const formatPalletsAndPackages = (pallets?: number, packages?: number): string =
     return `${packages || 0} Bultos`
   }
 
-  // Si hay pallets, mostrar "X Pallets and X/X Bultos"
+  // Si hay pallets, mostrar "X Pallets y X/X Bultos"
   return `${pallets} Pallets y ${packages || 0} Bultos`
 }
 
@@ -202,19 +205,20 @@ function ShipmentList({
             <TableHeader>
               <TableRow>
                 {/* Eliminamos la columna de número de envío */}
-                <TableHead className="w-[6%] text-xs">Fecha</TableHead>
-                <TableHead className="w-[5%] text-xs">Código</TableHead>
-                <TableHead className="w-[11%] text-xs">Cliente</TableHead>
-                <TableHead className="w-[9%] text-xs">Transporte</TableHead>
-                <TableHead className="w-[6%] text-xs">Pallets/Bultos</TableHead>
+                <TableHead className="w-[5%] text-xs">Fecha</TableHead>
+                <TableHead className="w-[4%] text-xs">Código</TableHead>
+                <TableHead className="w-[9%] text-xs">Cliente</TableHead>
+                <TableHead className="w-[8%] text-xs">Transporte</TableHead>
+                <TableHead className="w-[5%] text-xs">Pallets/Bultos</TableHead>
                 <TableHead className="w-[4%] text-xs">Peso</TableHead>
-                <TableHead className="w-[5%] text-xs">$ Valor</TableHead>
-                <TableHead className="w-[5%] text-xs">$ Envío</TableHead>
-                <TableHead className="w-[9%] text-xs">Factura</TableHead>
-                <TableHead className="w-[9%] text-xs">Remito</TableHead>
-                <TableHead className="w-[10%] text-xs">Nota Entrega</TableHead>
+                <TableHead className="w-[4%] text-xs">$ Valor</TableHead>
+                <TableHead className="w-[4%] text-xs">$ Envío</TableHead>
+                <TableHead className="w-[8%] text-xs">Factura</TableHead>
+                <TableHead className="w-[8%] text-xs">Remito</TableHead>
+                <TableHead className="w-[8%] text-xs">Nota Entrega</TableHead>
+                <TableHead className="w-[8%] text-xs">Nota Pedido</TableHead>
                 <TableHead className="w-[4%] text-xs">Estado</TableHead>
-                {showRemitoTriplicado && <TableHead className="w-[8%] text-xs">Remito Trip.</TableHead>}
+                {showRemitoTriplicado && <TableHead className="w-[7%] text-xs">Remito Trip.</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -250,6 +254,9 @@ function ShipmentList({
                     </TableCell>
                     <TableCell className="text-xs truncate" title={shipment.deliveryNote || "Sin nota"}>
                       {highlightText(shipment.deliveryNote || "Sin nota", searchTerm)}
+                    </TableCell>
+                    <TableCell className="text-xs truncate" title={shipment.orderNote || "Sin nota"}>
+                      {highlightText(shipment.orderNote || "Sin nota", searchTerm)}
                     </TableCell>
                     <TableCell>
                       <Badge variant={shipment.status === "sent" ? "default" : "secondary"} className="text-xs">
@@ -545,10 +552,6 @@ export default function EnviosPorFechaPage() {
     try {
       setIsExporting(true)
 
-      // Importar las bibliotecas de manera que funcionen juntas
-      const { jsPDF } = await import("jspdf")
-      const autoTable = (await import("jspdf-autotable")).default
-
       // Crear un nuevo documento PDF en orientación horizontal (landscape)
       const doc = new jsPDF({
         orientation: "landscape", // Formato horizontal
@@ -596,6 +599,7 @@ export default function EnviosPorFechaPage() {
         shipment.invoiceNumber || "-", // Add invoice number
         shipment.remitNumber || "-",
         shipment.deliveryNote || "Sin nota", // Nueva columna para nota de entrega
+        shipment.orderNote || "Sin nota", // Nueva columna para nota de pedido
         shipment.status === "sent" ? "ENVIADO" : "PENDIENTE", // Estado en MAYÚSCULAS
         shipment.remitoTriplicado ? "Recibido" : "Pendiente", // Remito Triplicado con primera letra mayúscula
         shipment.notes || "-",
@@ -615,6 +619,7 @@ export default function EnviosPorFechaPage() {
         "Factura",
         "Remito",
         "Nota Entrega", // Nueva columna
+        "Nota Pedido", // Nueva columna
         "Estado",
         "Remito Triplicado", // Nueva columna
         "Observaciones",
@@ -624,7 +629,7 @@ export default function EnviosPorFechaPage() {
       const pageWidth = doc.internal.pageSize.getWidth()
 
       // Calcular el ancho total de la tabla (suma de todos los anchos de columna)
-      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 20 + 18 + 22 + 30
+      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 20 + 20 + 18 + 22 + 30
 
       // Calcular los márgenes laterales para centrar la tabla
       const leftMargin = (pageWidth - totalTableWidth) / 2
@@ -635,8 +640,8 @@ export default function EnviosPorFechaPage() {
         body: tableData,
         startY: 30, // Empezar más abajo para dejar espacio al logo
         styles: {
-          fontSize: 7,
-          cellPadding: 1.5,
+          fontSize: 6,
+          cellPadding: 1,
           halign: "center", // Centrar horizontalmente todo el texto
           valign: "middle", // Centrar verticalmente todo el texto
         },
@@ -653,9 +658,10 @@ export default function EnviosPorFechaPage() {
           9: { cellWidth: 18 }, // Factura
           10: { cellWidth: 18 }, // Remito
           11: { cellWidth: 20 }, // Nota Entrega
-          12: { cellWidth: 18 }, // Estado
-          13: { cellWidth: 22 }, // Remito Triplicado
-          14: { cellWidth: 30 }, // Observaciones
+          12: { cellWidth: 20 }, // Nota Pedido
+          13: { cellWidth: 18 }, // Estado
+          14: { cellWidth: 22 }, // Remito Triplicado
+          15: { cellWidth: 30 }, // Observaciones
         },
         margin: {
           top: 30,
@@ -723,10 +729,6 @@ export default function EnviosPorFechaPage() {
 
     setIsSending(true)
     try {
-      // Importar las bibliotecas de manera que funcionen juntas
-      const { jsPDF } = await import("jspdf")
-      const autoTable = (await import("jspdf-autotable")).default
-
       // Crear un nuevo documento PDF en orientación horizontal (landscape)
       const doc = new jsPDF({
         orientation: "landscape", // Formato horizontal
@@ -774,6 +776,7 @@ export default function EnviosPorFechaPage() {
         shipment.invoiceNumber || "-", // Add invoice number
         shipment.remitNumber || "-",
         shipment.deliveryNote || "Sin nota", // Nueva columna para nota de entrega
+        shipment.orderNote || "Sin nota", // Nueva columna para nota de pedido
         shipment.status === "sent" ? "ENVIADO" : "PENDIENTE", // Estado en MAYÚSCULAS
         shipment.remitoTriplicado ? "Recibido" : "Pendiente", // Remito Triplicado con primera letra mayúscula
         shipment.notes || "-",
@@ -793,6 +796,7 @@ export default function EnviosPorFechaPage() {
         "Factura",
         "Remito",
         "Nota Entrega", // Nueva columna
+        "Nota Pedido", // Nueva columna
         "Estado",
         "Remito Triplicado", // Nueva columna
         "Observaciones",
@@ -802,7 +806,7 @@ export default function EnviosPorFechaPage() {
       const pageWidth = doc.internal.pageSize.getWidth()
 
       // Calcular el ancho total de la tabla (suma de todos los anchos de columna)
-      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 20 + 18 + 22 + 30
+      const totalTableWidth = 18 + 18 + 18 + 30 + 22 + 18 + 18 + 18 + 18 + 18 + 18 + 20 + 20 + 18 + 22 + 30
 
       // Calcular los márgenes laterales para centrar la tabla
       const leftMargin = (pageWidth - totalTableWidth) / 2
@@ -813,8 +817,8 @@ export default function EnviosPorFechaPage() {
         body: tableData,
         startY: 30, // Empezar más abajo para dejar espacio al logo
         styles: {
-          fontSize: 7,
-          cellPadding: 1.5,
+          fontSize: 6,
+          cellPadding: 1,
           halign: "center", // Centrar horizontalmente todo el texto
           valign: "middle", // Centrar verticalmente todo el texto
         },
@@ -831,9 +835,10 @@ export default function EnviosPorFechaPage() {
           9: { cellWidth: 18 }, // Factura
           10: { cellWidth: 18 }, // Remito
           11: { cellWidth: 20 }, // Nota Entrega
-          12: { cellWidth: 18 }, // Estado
-          13: { cellWidth: 22 }, // Remito Triplicado
-          14: { cellWidth: 30 }, // Observaciones
+          12: { cellWidth: 20 }, // Nota Pedido
+          13: { cellWidth: 18 }, // Estado
+          14: { cellWidth: 22 }, // Remito Triplicado
+          15: { cellWidth: 30 }, // Observaciones
         },
         margin: {
           top: 30,
@@ -939,9 +944,6 @@ export default function EnviosPorFechaPage() {
     }
 
     try {
-      // Import the xlsx library
-      const XLSX = await import("xlsx")
-
       // Prepare data for Excel with the requested formatting
       const data = shipments.map((shipment) => ({
         "Número de Envío": shipment.shipmentNumber,
@@ -956,6 +958,7 @@ export default function EnviosPorFechaPage() {
         Factura: shipment.invoiceNumber || "-",
         Remito: shipment.remitNumber || "-",
         "Nota de Entrega": shipment.deliveryNote || "Sin nota", // Nueva columna
+        "Nota de Pedido": shipment.orderNote || "Sin nota", // Nueva columna
         // Estado en MAYÚSCULAS
         Estado: shipment.status === "sent" ? "ENVIADO" : "PENDIENTE",
         // Remito Triplicado con primera letra mayúscula
@@ -984,7 +987,9 @@ export default function EnviosPorFechaPage() {
       // Ajustar anchos específicos para algunas columnas
       ws["!cols"][3] = { wch: 20 } // Cliente
       ws["!cols"][4] = { wch: 20 } // Transporte
-      ws["!cols"][14] = { wch: 25 } // Observaciones
+      ws["!cols"][11] = { wch: 20 } // Nota de Entrega
+      ws["!cols"][12] = { wch: 20 } // Nota de Pedido
+      ws["!cols"][15] = { wch: 25 } // Observaciones
 
       // Si no existe la propiedad !rows, crearla
       if (!ws["!rows"]) ws["!rows"] = []
@@ -1031,35 +1036,40 @@ export default function EnviosPorFechaPage() {
       return shipments
     }
 
-    const searchTermLower = searchTerm.toLowerCase().trim()
+    const searchTermTrimmed = searchTerm.trim()
+    const searchTermLower = searchTermTrimmed.toLowerCase()
+
+    // Si el término de búsqueda es solo números, buscar coincidencias numéricas más flexibles
+    const isNumericSearch = /^\d+$/.test(searchTermTrimmed)
 
     return shipments.filter((shipment) => {
-      // Buscar en campos principales
-      if (
-        (shipment.client && shipment.client.toLowerCase().includes(searchTermLower)) ||
-        (shipment.transport && shipment.transport.toLowerCase().includes(searchTermLower)) ||
-        (shipment.shipmentNumber && shipment.shipmentNumber.toLowerCase().includes(searchTermLower)) ||
-        (shipment.clientCode && shipment.clientCode.toLowerCase().includes(searchTermLower))
-      ) {
-        return true
+      // Función helper para buscar en campos de texto
+      const searchInField = (field: string | undefined | null) => {
+        if (!field) return false
+
+        const fieldStr = String(field)
+
+        if (isNumericSearch) {
+          // Para búsquedas numéricas, remover espacios, guiones y otros caracteres especiales
+          const cleanField = fieldStr.replace(/[-\s_.]/g, "")
+          return cleanField.includes(searchTermTrimmed)
+        } else {
+          // Para búsquedas de texto, usar el método normal
+          return fieldStr.toLowerCase().includes(searchTermLower)
+        }
       }
 
-      // Buscar en número de factura
-      if (shipment.invoiceNumber && shipment.invoiceNumber.toLowerCase().includes(searchTermLower)) {
-        return true
-      }
-
-      // Buscar en número de remito
-      if (shipment.remitNumber && shipment.remitNumber.toLowerCase().includes(searchTermLower)) {
-        return true
-      }
-
-      // Buscar en nota de entrega
-      if (shipment.deliveryNote && shipment.deliveryNote.toLowerCase().includes(searchTermLower)) {
-        return true
-      }
-
-      return false
+      // Buscar en todos los campos relevantes
+      return (
+        searchInField(shipment.client) ||
+        searchInField(shipment.transport) ||
+        searchInField(shipment.shipmentNumber) ||
+        searchInField(shipment.clientCode) ||
+        searchInField(shipment.invoiceNumber) ||
+        searchInField(shipment.remitNumber) ||
+        searchInField(shipment.deliveryNote) ||
+        searchInField(shipment.orderNote)
+      )
     })
   }, [shipments, searchTerm])
 
@@ -1195,7 +1205,7 @@ export default function EnviosPorFechaPage() {
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             id="search-input"
-            placeholder="Buscar por cliente, transporte, factura, remito, nota entrega..."
+            placeholder="Buscar por cliente, transporte, factura, remito, nota de entrega, nota de pedido..."
             className="pl-8 pr-10"
             defaultValue={searchTerm}
             onChange={handleSearchChange}

@@ -327,7 +327,7 @@ export default function DashboardContent() {
   return (
     <div className="w-full px-[100px] pt-[50px]">
       <div className="flex justify-between items-center mb-6 px-4">
-        <h1 className="text-2xl font-bold">Gestion de Envíos - Asertiva</h1>
+        <h1 className="text-2xl font-bold">Gestion de Envíos - Gemico</h1>
         <div className="flex space-x-2">
           <Button variant="outline" onClick={() => router.push("/envios-por-fecha")}>
             Plantillas de Envios

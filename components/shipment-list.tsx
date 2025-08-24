@@ -296,13 +296,42 @@ export default function ShipmentList({
 
   // Filter shipments based on search term
   const filteredShipments = shipments.filter((shipment) => {
-    const searchLower = searchTerm.toLowerCase()
+    if (!searchTerm || searchTerm.trim() === "") {
+      return true
+    }
+
+    const searchTermTrimmed = searchTerm.trim()
+    const searchTermLower = searchTermTrimmed.toLowerCase()
+
+    // Si el término de búsqueda es solo números, buscar coincidencias numéricas más flexibles
+    const isNumericSearch = /^\d+$/.test(searchTermTrimmed)
+
+    // Función helper para buscar en campos de texto
+    const searchInField = (field: string | undefined | null) => {
+      if (!field) return false
+
+      const fieldStr = String(field)
+
+      if (isNumericSearch) {
+        // Para búsquedas numéricas, remover espacios, guiones y otros caracteres especiales
+        const cleanField = fieldStr.replace(/[-\s_.]/g, "")
+        return cleanField.includes(searchTermTrimmed)
+      } else {
+        // Para búsquedas de texto, usar el método normal
+        return fieldStr.toLowerCase().includes(searchTermLower)
+      }
+    }
+
+    // Buscar en todos los campos relevantes
     return (
-      shipment.client?.toLowerCase().includes(searchLower) ||
-      shipment.transport?.toLowerCase().includes(searchLower) ||
-      shipment.shipmentNumber?.toLowerCase().includes(searchLower) ||
-      (shipment.clientCode && shipment.clientCode.toLowerCase().includes(searchLower)) ||
-      (shipment.deliveryNote && shipment.deliveryNote.toLowerCase().includes(searchLower))
+      searchInField(shipment.client) ||
+      searchInField(shipment.transport) ||
+      searchInField(shipment.shipmentNumber) ||
+      searchInField(shipment.clientCode) ||
+      searchInField(shipment.invoiceNumber) ||
+      searchInField(shipment.remitNumber) ||
+      searchInField(shipment.deliveryNote) ||
+      searchInField(shipment.orderNote)
     )
   })
 
@@ -312,7 +341,7 @@ export default function ShipmentList({
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por cliente, transporte, número de envío, código de cliente o nota de entrega..."
+            placeholder="Buscar por cliente, transporte, número de envío, código de cliente, nota de entrega o nota de pedido..."
             className="pl-8"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -337,20 +366,21 @@ export default function ShipmentList({
             <Table className="w-full table-fixed">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[6%] text-xs">Nº Envío</TableHead>
-                  <TableHead className="w-[6%] text-xs">Fecha</TableHead>
-                  <TableHead className="w-[5%] text-xs">Código</TableHead>
-                  <TableHead className="w-[12%] text-xs">Cliente</TableHead>
-                  <TableHead className="w-[10%] text-xs">Transporte</TableHead>
-                  <TableHead className="w-[8%] text-xs">Pallets/Bultos</TableHead>
-                  <TableHead className="w-[6%] text-xs">Peso (kg)</TableHead>
-                  <TableHead className="w-[6%] text-xs">$ Valor</TableHead>
-                  <TableHead className="w-[6%] text-xs">Factura</TableHead>
-                  <TableHead className="w-[6%] text-xs">Remito</TableHead>
-                  <TableHead className="w-[10%] text-xs">Nota Entrega</TableHead>
-                  <TableHead className="w-[5%] text-xs">Estado</TableHead>
-                  {showRemitoTriplicado && <TableHead className="w-[7%] text-xs">Remito Trip.</TableHead>}
-                  <TableHead className="text-right w-[6%] text-xs">Acciones</TableHead>
+                  <TableHead className="w-[5%] text-xs">Nº Envío</TableHead>
+                  <TableHead className="w-[5%] text-xs">Fecha</TableHead>
+                  <TableHead className="w-[4%] text-xs">Código</TableHead>
+                  <TableHead className="w-[10%] text-xs">Cliente</TableHead>
+                  <TableHead className="w-[9%] text-xs">Transporte</TableHead>
+                  <TableHead className="w-[7%] text-xs">Pallets/Bultos</TableHead>
+                  <TableHead className="w-[5%] text-xs">Peso (kg)</TableHead>
+                  <TableHead className="w-[5%] text-xs">$ Valor</TableHead>
+                  <TableHead className="w-[5%] text-xs">Factura</TableHead>
+                  <TableHead className="w-[5%] text-xs">Remito</TableHead>
+                  <TableHead className="w-[8%] text-xs">Nota Entrega</TableHead>
+                  <TableHead className="w-[8%] text-xs">Nota Pedido</TableHead>
+                  <TableHead className="w-[4%] text-xs">Estado</TableHead>
+                  {showRemitoTriplicado && <TableHead className="w-[6%] text-xs">Remito Trip.</TableHead>}
+                  <TableHead className="text-right w-[5%] text-xs">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -381,6 +411,9 @@ export default function ShipmentList({
                     <TableCell className="text-xs truncate">{shipment.remitNumber || "-"}</TableCell>
                     <TableCell className="text-xs truncate" title={shipment.deliveryNote || "Sin nota"}>
                       {shipment.deliveryNote || "Sin nota"}
+                    </TableCell>
+                    <TableCell className="text-xs truncate" title={shipment.orderNote || "Sin nota"}>
+                      {shipment.orderNote || "Sin nota"}
                     </TableCell>
                     <TableCell>
                       <Badge variant={shipment.status === "sent" ? "default" : "secondary"} className="text-xs">

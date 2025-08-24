@@ -46,11 +46,12 @@ export interface Shipment {
   createdAt?: string
   invoiceNumber: string
   remitNumber: string
-  deliveryNote: string // Campo para número de nota de entrega
+  deliveryNote: string // Campo para número de nota de entrega manual
+  orderNote: string // Campo para nota de pedido
   notes: string
   hasColdChain: boolean
   isUrgent: boolean
   isFragile?: boolean
   remitoTriplicado?: boolean
-  shippingCost?: number // Nueva propiedad para el costo del envío
+  shippingCost?: number
 }

@@ -41,6 +41,13 @@ export default function ShipmentLabel({
     generateQR()
   }, [shipment.shipmentNumber])
 
+  // Función para calcular fecha de vencimiento de cadena de frío (24 horas después)
+  const getColdChainExpiry = () => {
+    const now = new Date()
+    const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000) // 24 horas después
+    return format(expiry, "dd/MM/yyyy HH:mm", { locale: es })
+  }
+
   // Determine what text to display for pallets and packages on separate lines
   const getPackageLines = () => {
     const hasPallets = shipment.pallets && shipment.pallets > 0
@@ -107,17 +114,17 @@ export default function ShipmentLabel({
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-2">
               <Image
-                src="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
-                alt="Asertiva Logo"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Gemico-uBE9D9uAFAorAj3wQ1JCsUhsu6oZwO.png"
+                alt="Gemico Logo"
                 width={100}
                 height={50}
                 className="object-contain"
                 priority
               />
               <div>
-                <h2 className="text-lg font-bold leading-tight">ASERTIVA S.A.</h2>
-                <p className="text-sm text-gray-600 leading-tight">Av. Colon 1450, Bahía Blanca</p>
-                <p className="text-sm text-gray-600 leading-tight">Ce. Dep.: +54 9 291-412-1426</p>
+                <h2 className="text-lg font-bold leading-tight">EQUIPO GEMICO S.A.</h2>
+                <p className="text-sm text-gray-600 leading-tight">Vicente Lopez 749, Bahía Blanca</p>
+                <p className="text-sm text-gray-600 leading-tight">Tel: 291-4521744</p>
               </div>
             </div>
             <div className="text-right">
@@ -147,11 +154,6 @@ export default function ShipmentLabel({
                     <p className="text-lg">[{shipment.clientAddressTitle}]</p>
                   )}
                 </div>
-
-                {/* Si el título no está incluido en clientAddress pero existe en clientAddressTitle, mostrarlo */}
-                {/* {!shipment.clientAddress.includes("[") && shipment.clientAddressTitle && (
-                  <p className="text-lg mb-3">[{shipment.clientAddressTitle}]</p>
-                )} */}
               </div>
 
               {/* Transporte */}
@@ -170,7 +172,7 @@ export default function ShipmentLabel({
 
               {shipment.deliveryNote && !shipment.remitNumber && (
                 <div>
-                  <p className="text-xs text-gray-600 mb-0">Nota de Pedido</p>
+                  <p className="text-xs text-gray-600 mb-0">Nota de Entrega</p>
                   <p className="text-sm font-semibold">{shipment.deliveryNote}</p>
                 </div>
               )}
@@ -178,7 +180,7 @@ export default function ShipmentLabel({
               {/* Nota de Entrega */}
               {shipment.deliveryNote && (
                 <div>
-                  <p className="text-xs text-gray-600 mb-0">Nota de Pedido</p>
+                  <p className="text-xs text-gray-600 mb-0">Nota de Entrega</p>
                   <p className="text-sm font-semibold">{shipment.deliveryNote}</p>
                 </div>
               )}
@@ -186,9 +188,9 @@ export default function ShipmentLabel({
 
             {/* Columna derecha - QR */}
             <div className="w-[5cm] flex flex-col items-center justify-start">
-              {/* QR Code */}
+              {/* QR Code - MÁS PEQUEÑO */}
               <div className="flex flex-col items-center justify-center mb-2">
-                {qrCode && <img src={qrCode || "/placeholder.svg"} alt="QR Code" className="w-28 h-28" />}
+                {qrCode && <img src={qrCode || "/placeholder.svg"} alt="QR Code" className="w-16 h-16" />}
                 <p className="text-center text-xs text-gray-600 mt-1">Escanee para ver detalles</p>
               </div>
 
@@ -196,8 +198,8 @@ export default function ShipmentLabel({
               <div className="w-full flex flex-col gap-1">
                 {/* Texto de medicamentos - condicional según cadena de frío */}
                 {shipment.hasColdChain ? (
-                  <div className="w-full text-center font-bold text-[0.65rem] bg-blue-100 border border-blue-400 p-0.5 rounded">
-                    MEDICAMENTOS CON CADENA DE FRIO (DE 2° A 8°)
+                  <div className="w-full text-center font-bold text-[0.8rem] bg-blue-100 border border-blue-400 p-1 rounded">
+                    MEDICAMENTOS CON CADENA DE FRIO (DE 2° A 8°) VTO: {getColdChainExpiry()}
                   </div>
                 ) : (
                   <div className="w-full text-center font-bold text-[0.65rem] bg-yellow-100 border border-yellow-400 p-0.5 rounded">

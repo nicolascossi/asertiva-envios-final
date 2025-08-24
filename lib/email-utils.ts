@@ -35,7 +35,7 @@ ${shipment.attachments.map((url, index) => `- Documento ${index + 1}: ${url}`).j
 Gracias por confiar en nuestros servicios.
 
 Atentamente,
-Asertiva Envíos`
+Gemico Envíos`
 
   return body
 }

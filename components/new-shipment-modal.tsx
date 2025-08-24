@@ -52,6 +52,7 @@ export default function NewShipmentModal({
     invoiceNumber: "",
     remitNumber: "",
     deliveryNote: "", // Inicializar nota de entrega como string vacío
+    orderNote: "", // Inicializar nota de pedido como string vacío
     notes: "",
     hasColdChain: false,
     isUrgent: false,
@@ -107,7 +108,7 @@ export default function NewShipmentModal({
       if (remitType === "R") {
         setShipment((prev) => ({
           ...prev,
-          remitNumber: `${remitType} - 0001 - ${remitNumber}`,
+          remitNumber: `${remitType} - 0003 - ${remitNumber}`,
         }))
       } else if (remitType === "X") {
         setShipment((prev) => ({
@@ -133,11 +134,11 @@ export default function NewShipmentModal({
     if (invoiceNumber) {
       let prefix = ""
       if (invoiceType === "A") {
-        prefix = "A 00002-"
+        prefix = "A 00001-"
       } else if (invoiceType === "B") {
-        prefix = "B 00002-"
+        prefix = "B 00001-"
       } else if (invoiceType === "E") {
-        prefix = "E 00003-"
+        prefix = "E 00004-"
       }
 
       setShipment((prev) => ({
@@ -213,40 +214,6 @@ export default function NewShipmentModal({
 
   // Añadir el estado para pallets
   const [pallets, setPallets] = useState<number | undefined>(undefined)
-
-  // Función para manejar navegación con teclado en selects
-  const handleSelectKeyDown = (
-    e: React.KeyboardEvent,
-    options: any[],
-    currentValue: any,
-    onChange: (value: any) => void,
-  ) => {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-      e.preventDefault()
-      const currentIndex = options.findIndex(
-        (option) =>
-          option.value === currentValue ||
-          option.id === currentValue ||
-          option.name === currentValue ||
-          option === currentValue,
-      )
-      let newIndex
-
-      if (e.key === "ArrowUp") {
-        newIndex = currentIndex > 0 ? currentIndex - 1 : options.length - 1
-      } else {
-        newIndex = currentIndex < options.length - 1 ? currentIndex + 1 : 0
-      }
-
-      const newValue = options[newIndex]
-      if (newValue) {
-        if (newValue.value) onChange(newValue.value)
-        else if (newValue.id) onChange(newValue.id)
-        else if (newValue.name) onChange(newValue.name)
-        else onChange(newValue)
-      }
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -533,11 +500,7 @@ export default function NewShipmentModal({
                     value={selectedAddress?.id}
                     disabled={selectedClient.addresses.length === 0}
                   >
-                    <SelectTrigger
-                      onKeyDown={(e) =>
-                        handleSelectKeyDown(e, selectedClient.addresses, selectedAddress?.id, handleAddressChange)
-                      }
-                    >
+                    <SelectTrigger>
                       <SelectValue placeholder="Seleccionar dirección" />
                     </SelectTrigger>
                     <SelectContent>
@@ -573,20 +536,7 @@ export default function NewShipmentModal({
                 Transporte
               </Label>
               <Select onValueChange={handleTransportChange}>
-                <SelectTrigger
-                  className="col-span-3"
-                  onKeyDown={(e) =>
-                    handleSelectKeyDown(
-                      e,
-                      sortedTransports.map((t) => ({
-                        name: t.name || `transport-${t.id}`,
-                        value: t.name || `transport-${t.id}`,
-                      })),
-                      shipment.transport,
-                      handleTransportChange,
-                    )
-                  }
-                >
+                <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Seleccionar transporte" />
                 </SelectTrigger>
                 <SelectContent>
@@ -692,14 +642,7 @@ export default function NewShipmentModal({
                 value={shipment.status}
                 onValueChange={(value) => setShipment({ ...shipment, status: value as "pending" | "sent" })}
               >
-                <SelectTrigger
-                  className="col-span-3"
-                  onKeyDown={(e) =>
-                    handleSelectKeyDown(e, [{ value: "pending" }, { value: "sent" }], shipment.status, (value) =>
-                      setShipment({ ...shipment, status: value as "pending" | "sent" }),
-                    )
-                  }
-                >
+                <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Seleccione el estado" />
                 </SelectTrigger>
                 <SelectContent>
@@ -719,6 +662,20 @@ export default function NewShipmentModal({
                 placeholder="Ingrese el número de nota de entrega"
                 value={shipment.deliveryNote || ""}
                 onChange={(e) => setShipment({ ...shipment, deliveryNote: e.target.value })}
+                className="col-span-3"
+              />
+            </div>
+
+            {/* Campo de Nota de Pedido como input de texto */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="orderNote" className="text-right">
+                Nota de Pedido
+              </Label>
+              <Input
+                id="orderNote"
+                placeholder="Ingrese el número de nota de pedido"
+                value={shipment.orderNote || ""}
+                onChange={(e) => setShipment({ ...shipment, orderNote: e.target.value })}
                 className="col-span-3"
               />
             </div>
@@ -764,14 +721,7 @@ export default function NewShipmentModal({
               <Label htmlFor="invoiceNumber">Número de Factura</Label>
               <div className="flex gap-2">
                 <Select value={invoiceType} onValueChange={(value) => setInvoiceType(value as "A" | "B" | "E")}>
-                  <SelectTrigger
-                    className="w-20"
-                    onKeyDown={(e) =>
-                      handleSelectKeyDown(e, [{ value: "A" }, { value: "B" }, { value: "E" }], invoiceType, (value) =>
-                        setInvoiceType(value as "A" | "B" | "E"),
-                      )
-                    }
-                  >
+                  <SelectTrigger className="w-20">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -796,14 +746,7 @@ export default function NewShipmentModal({
               <Label htmlFor="remitNumber">Número de Remito</Label>
               <div className="flex gap-2">
                 <Select value={remitType} onValueChange={(value) => setRemitType(value as "R" | "X" | "RM")}>
-                  <SelectTrigger
-                    className="w-20"
-                    onKeyDown={(e) =>
-                      handleSelectKeyDown(e, [{ value: "R" }, { value: "X" }, { value: "RM" }], remitType, (value) =>
-                        setRemitType(value as "R" | "X" | "RM"),
-                      )
-                    }
-                  >
+                  <SelectTrigger className="w-20">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -880,4 +823,3 @@ export default function NewShipmentModal({
     </Dialog>
   )
 }
-

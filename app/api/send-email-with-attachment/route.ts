@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     // Configurar las opciones del correo
     const mailOptions = {
-      from: process.env.SENDER_EMAIL || "envios@asertiva.com.ar",
+      from: process.env.SENDER_EMAIL || "envios@gemico.shop",
       to: Array.isArray(to) ? to.join(", ") : to,
       subject,
       text,

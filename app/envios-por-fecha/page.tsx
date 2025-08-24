@@ -561,7 +561,7 @@ export default function EnviosPorFechaPage() {
 
       // Cargar el logo de Asertiva
       const logoUrl =
-        "https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8
+        "https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
 
       // Función para añadir el logo y encabezado a cada página
       const addHeaderToPage = (doc) => {
@@ -878,17 +878,17 @@ export default function EnviosPorFechaPage() {
       // Preparar los datos para enviar al endpoint
       const emailData = {
         to: [
-          "ventas@asertiva.com.ar"
-          "equipo@asertiva.com.ar"
-          "soporte@asertiva.com.ar"
-          "deposito@asertiva.com.ar"
+          "ventas@asertiva.com.ar",
+          "equipo@asertiva.com.ar",
+          "soporte@asertiva.com.ar",
+          "deposito@asertiva.com.ar",
           "nicolasmartincossi@gmail.com",
         ],
         subject: emailSubject,
         html: `
           <h2>Plantilla de Envíos</h2>
           <p>${emailBodyText}</p>
-          <p>Este correo ha sido generado automáticamente desde el sistema de gestión de envíos de Asertiva
+          <p>Este correo ha sido generado automáticamente desde el sistema de gestión de envíos de Asertiva.</p>
         `,
         pdfBase64: pdfBase64,
         pdfFilename:

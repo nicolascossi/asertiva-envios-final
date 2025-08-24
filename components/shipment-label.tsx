@@ -114,7 +114,7 @@ export default function ShipmentLabel({
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-2">
               <Image
-                src="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8
+                src="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
                 alt="Asertiva Logo"
                 width={100}
                 height={50}

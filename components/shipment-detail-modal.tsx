@@ -404,7 +404,7 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
         <DialogHeader className="flex flex-col items-center space-y-4">
           <Image
             src="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
-            alt="Asertiva
+            alt="Asertiva"
             width={120}
             height={60}
             className="object-contain"

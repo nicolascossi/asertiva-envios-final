@@ -48,7 +48,7 @@ export function TestEmailButton() {
 
       setResult({
         success: true,
-        message: `Email enviado correctamente desde ${process.env.NEXT_PUBLIC_SENDER_EMAIL || "envios@gemico.shop"}. 
+        message: `Email enviado correctamente desde ${process.env.NEXT_PUBLIC_SENDER_EMAIL || "deposito@asertiva.site"}. 
                   Por favor, verifica la bandeja de entrada y la carpeta de spam de ${testShipment.clientEmail}.`,
       })
     } catch (error) {
@@ -73,7 +73,7 @@ export function TestEmailButton() {
         </Alert>
       )}
       <p className="text-sm text-muted-foreground">
-        Dirección del remitente: {process.env.NEXT_PUBLIC_SENDER_EMAIL || "envios@gemico.shop"}
+        Dirección del remitente: {process.env.NEXT_PUBLIC_SENDER_EMAIL || "deposito@asertiva.site"}
       </p>
     </div>
   )

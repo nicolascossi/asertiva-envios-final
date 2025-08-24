@@ -3,7 +3,7 @@ import type { Shipment } from "@/lib/types"
 
 const API_KEY = process.env.BREVO_API_KEY
 const API_URL = "https://api.brevo.com/v3/smtp/email"
-const SENDER_EMAIL = process.env.NEXT_PUBLIC_SENDER_EMAIL || "envios@gemico.shop"
+const SENDER_EMAIL = process.env.NEXT_PUBLIC_SENDER_EMAIL || "deposito@asertiva.site"
 
 export async function sendEmailNotification(shipment: Shipment): Promise<any> {
   console.log("Starting email notification process")
@@ -31,7 +31,7 @@ export async function sendEmailNotification(shipment: Shipment): Promise<any> {
 
   const emailData: any = {
     sender: {
-      name: "Equipo Gemico",
+      name: "Asertiva",
       email: SENDER_EMAIL,
     },
     to: [
@@ -63,7 +63,7 @@ export async function sendEmailNotification(shipment: Shipment): Promise<any> {
                 <li><strong>Número de envío:</strong> ${safeShipment.shipmentNumber}</li>
                 <li><strong>Fecha de despacho:</strong> ${new Date(safeShipment.date).toLocaleDateString()}</li>
                 <li><strong>Cantidad de bultos:</strong> ${safeShipment.packages}</li>
-                <li><strong>Ver detalles del envío:</strong> <a href="https://v0-gemico-app.vercel.app/pedido/${safeShipment.shipmentNumber}" target="_blank">CLICK ACA</a></li>
+                <li><strong>Ver detalles del envío:</strong> <a href="https://asertiva-app.vercel.app/pedido/${safeShipment.shipmentNumber}" target="_blank">CLICK ACA</a></li>
               </ul>
               <h2>Información del transporte:</h2>
               <ul>
@@ -72,7 +72,7 @@ export async function sendEmailNotification(shipment: Shipment): Promise<any> {
               </ul>
             </div>
             <p>Para más detalles o consultas sobre su envío, por favor escanee el código QR en la etiqueta del envío o contáctenos directamente.</p>
-            <p>Gracias por confiar en Equipo Gemico.</p>
+            <p>Gracias por confiar en Asertiva.</p>
             <div class="footer">
               <p>Este es un mensaje automático, por favor no responda a este correo.</p>
               <p>Si necesita asistencia, contáctenos a través de nuestros canales oficiales de atención al cliente.</p>

@@ -403,8 +403,8 @@ export default function ShipmentDetailModal({ shipment, onClose, showPrintButton
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader className="flex flex-col items-center space-y-4">
           <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Gemico-uBE9D9uAFAorAj3wQ1JCsUhsu6oZwO.png"
-            alt="Gemico Logo"
+            src="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
+            alt="Asertiva
             width={120}
             height={60}
             className="object-contain"

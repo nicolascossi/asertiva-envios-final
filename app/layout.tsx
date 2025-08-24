@@ -8,13 +8,13 @@ import { Providers } from "./providers"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Gemico Envíos",
+  title: "Asertiva Envíos",
   description: "Sistema de gestión de envíos",
   icons: {
     icon: [
       {
-        url: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LogoCuadrado-YJpvxkDWNlK7H1NngpNW05GYYpqL7X.png",
-        href: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LogoCuadrado-YJpvxkDWNlK7H1NngpNW05GYYpqL7X.png",
+        url: "https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8",
+        href: "https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8",
       },
     ],
   },
@@ -32,7 +32,7 @@ export default function RootLayout({
         <link
           rel="icon"
           type="image/png"
-          href="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LogoCuadrado-YJpvxkDWNlK7H1NngpNW05GYYpqL7X.png"
+          href="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
         />
       </head>
       <body className={`${inter.className} light bg-white text-black`}>

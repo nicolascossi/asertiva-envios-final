@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: "Email sent successfully",
       result,
-      senderEmail: process.env.NEXT_PUBLIC_SENDER_EMAIL || "envios@gemico.shop",
+      senderEmail: process.env.NEXT_PUBLIC_SENDER_EMAIL || "deposito@asertiva.site",
       attachmentsSent: shipment.attachments?.length || 0,
     })
   } catch (error) {

@@ -202,7 +202,7 @@ export default async function ShipmentDetailsPage({ params }: PageProps) {
 
         {/* Footer */}
         <div className="text-center text-gray-500 text-sm">
-          <p>© 2024 Gemico Envíos - Sistema de Seguimiento</p>
+          <p>© 2024 Asertiva- Sistema de Seguimiento</p>
         </div>
       </div>
     </div>

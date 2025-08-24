@@ -15,7 +15,7 @@ const gmail = google.gmail({ version: "v1", auth: oauth2Client })
 export const sendShipmentNotification = functions.https.onCall(async (data, context) => {
   const { shipment } = data
 
-  const subject = `Equipo Gemico ya envió el pedido número ${shipment.shipmentNumber}`
+  const subject = `Asertiva ya envió el pedido número ${shipment.shipmentNumber}`
   const to = shipment.clientEmail
   const from = "tu.email@gmail.com" // Tu dirección de Gmail
 
@@ -36,7 +36,7 @@ export const sendShipmentNotification = functions.https.onCall(async (data, cont
       <li><strong>Email del transporte:</strong> ${shipment.transportEmail}</li>
     </ul>
     <p>Puede hacer seguimiento de su envío contactando directamente con el transporte.</p>
-    <p>Gracias por confiar en Gemico Envíos.</p>
+    <p>Gracias por confiar en Asertiva.</p>
   `
 
   const message = [

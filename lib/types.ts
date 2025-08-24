@@ -1,57 +1,63 @@
 export interface Client {
   id: string
-  businessName: string
-  clientCode: string
-  email: string
+  name: string
+  code?: string
   phone: string
-  addresses: ClientAddress[]
-}
-
-export interface ClientAddress {
-  id: string
-  street: string
-  city?: string
-  title?: string
-  isDefault: boolean
+  email: string
+  address: string
+  addressTitle?: string
 }
 
 export interface Transport {
   id: string
   name: string
-  email: string
   phone: string
-  transportCode: string
+  email: string
 }
 
 export interface Shipment {
   id: string
   shipmentNumber: string
   client: string
-  clientEmail: string
-  clientPhone: string
-  clientAddress: string
-  clientAddressId?: string
-  clientAddressTitle?: string
   clientCode?: string
+  clientPhone: string
+  clientEmail: string
+  clientAddress: string
+  clientAddressTitle?: string
   transport: string
-  transportEmail: string
   transportPhone: string
+  transportEmail: string
   date: string
   packages: number
   pallets?: number
   weight?: number
-  declaredValue?: number
+  volume?: number
   status: "pending" | "sent"
-  attachments?: string[]
-  createdAt?: string
-  invoiceNumber: string
-  remitNumber: string
-  deliveryNote: string // Campo para número de nota de entrega manual
-  orderNote: string // Campo para nota de pedido
-  notes: string
   hasColdChain: boolean
   isUrgent: boolean
   isFragile?: boolean
-  remitoTriplicado?: boolean
-  shippingCost?: number
+  invoiceNumber?: string
+  remitNumber?: string
+  deliveryNote?: string
+  orderNote?: string
+  declaredValue?: number
+  attachments?: string[]
+  observations?: string
+  notes?: string
+}
+
+export interface EmailLog {
+  id: string
+  to: string
+  subject: string
+  timestamp: string
+  status: "sent" | "failed"
+  error?: string
+}
+
+export interface User {
+  id: string
+  email: string
+  name: string
+  role: "admin" | "user"
 }

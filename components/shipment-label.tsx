@@ -114,17 +114,17 @@ export default function ShipmentLabel({
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-2">
               <Image
-                src="https://firebasestorage.googleapis.com/v0/b/asertiva-68861.firebasestorage.app/o/LOGO%20ASERTIVA.png?alt=media&token=b8a415b0-f670-44c4-ac59-f53cc77ed3a8"
-                alt="Asertiva Logo"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo%20Gemico-uBE9D9uAFAorAj3wQ1JCsUhsu6oZwO.png"
+                alt="Gemico Logo"
                 width={100}
                 height={50}
                 className="object-contain"
                 priority
               />
               <div>
-                <h2 className="text-lg font-bold leading-tight">Asertiva S.A.</h2>
-                <p className="text-sm text-gray-600 leading-tight">Av. Colon 1450, Bahía Blanca</p>
-                <p className="text-sm text-gray-600 leading-tight">Cel. Dep: 291-412142</p>
+                <h2 className="text-lg font-bold leading-tight">EQUIPO GEMICO S.A.</h2>
+                <p className="text-sm text-gray-600 leading-tight">Vicente Lopez 749, Bahía Blanca</p>
+                <p className="text-sm text-gray-600 leading-tight">Tel: 291-4521744</p>
               </div>
             </div>
             <div className="text-right">

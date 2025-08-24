@@ -13,12 +13,12 @@ export async function POST(request: Request) {
     // Configurar los datos para el correo
     const emailData = {
       sender: {
-        name: "Asertiva
+        name: "Asertiva",
         email: process.env.NEXT_PUBLIC_SENDER_EMAIL || "deposito@asertiva.site"
       },
       to: Array.isArray(to)
-        ? to.map((email) => ({ email, name: "Asertiva
-        : [{ email: to, name: "Asertiva
+        ? to.map((email) => ({ email, name: "Asertiva" }))
+        : [{ email: to, name: "Asertiva" }],
       subject,
       htmlContent: html,
       attachment: [

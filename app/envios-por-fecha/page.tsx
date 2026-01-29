@@ -554,10 +554,10 @@ export default function EnviosPorFechaPage() {
 
       // Crear un nuevo documento PDF en orientación horizontal (landscape)
       const doc = new jsPDF({
-        orientation: "landscape", // Formato horizontal
-        unit: "mm",
-        format: "a4",
-      })
+  orientation: "landscape",
+  unit: "mm",
+  format: [841, 594], // A1 apaisado
+})
 
       // Cargar el logo de Asertiva
       const logoUrl =
@@ -730,11 +730,11 @@ export default function EnviosPorFechaPage() {
     setIsSending(true)
     try {
       // Crear un nuevo documento PDF en orientación horizontal (landscape)
-      const doc = new jsPDF({
-        orientation: "landscape", // Formato horizontal
-        unit: "mm",
-        format: "a4",
-      })
+     const doc = new jsPDF({
+  orientation: "landscape", // Formato horizontal
+  unit: "mm",
+  format: "a4",
+})
 
       // Cargar el logo de Asertiva
       const logoUrl =

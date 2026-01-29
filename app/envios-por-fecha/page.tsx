@@ -635,47 +635,42 @@ export default function EnviosPorFechaPage() {
       const leftMargin = (pageWidth - totalTableWidth) / 2
 
       // Generar la tabla - ajustando anchos para que quepa en A4 horizontal y use todo el ancho disponible
-      autoTable(doc, {
-        head: [headers],
-        body: tableData,
-        startY: 30, // Empezar más abajo para dejar espacio al logo
-        styles: {
-          fontSize: 6,
-          cellPadding: 1,
-          halign: "center", // Centrar horizontalmente todo el texto
-          valign: "middle", // Centrar verticalmente todo el texto
-        },
-        columnStyles: {
-          0: { cellWidth: 18 }, // Nº Envío
-          1: { cellWidth: 18 }, // Fecha
-          2: { cellWidth: 18 }, // Código Cliente
-          3: { cellWidth: 30 }, // Cliente
-          4: { cellWidth: 22 }, // Transporte
-          5: { cellWidth: 18 }, // Pallets/Bultos
-          6: { cellWidth: 18 }, // Peso
-          7: { cellWidth: 18 }, // Valor
-          8: { cellWidth: 18 }, // Costo Envío
-          9: { cellWidth: 18 }, // Factura
-          10: { cellWidth: 18 }, // Remito
-          11: { cellWidth: 20 }, // Nota Entrega
-          12: { cellWidth: 20 }, // Nota Pedido
-          13: { cellWidth: 18 }, // Estado
-          14: { cellWidth: 22 }, // Remito Triplicado
-          15: { cellWidth: 30 }, // Observaciones
-        },
-        margin: {
-          top: 30,
-          left: leftMargin, // Centrar la tabla horizontalmente
-          right: leftMargin, // Centrar la tabla horizontalmente
-          bottom: 15,
-        },
-        didDrawPage: (data) => {
-          // Si no es la primera página, añadir logo y encabezado
-          if (data.pageNumber > 1) {
-            addHeaderToPage(doc)
-          }
-        },
-      })
+autoTable(doc, {
+  head: [headers],
+  body: tableData,
+  startY: 30,
+  theme: "grid",
+
+  // 👉 evita que se corte a los costados
+  horizontalPageBreak: true,
+
+  // 👉 márgenes fijos seguros
+  margin: { top: 30, left: 10, right: 10, bottom: 15 },
+
+  // 👉 que se adapte al ancho real del A1
+  tableWidth: "auto",
+
+  styles: {
+    fontSize: 8,
+    cellPadding: 1.5,
+    halign: "center",
+    valign: "middle",
+    overflow: "linebreak",
+  },
+
+  // 👉 solo agrandamos columnas críticas
+  columnStyles: {
+    3: { cellWidth: 40 }, // Cliente
+    15: { cellWidth: 50 }, // Observaciones
+  },
+
+  didDrawPage: (data) => {
+    if (data.pageNumber > 1) {
+      addHeaderToPage(doc)
+    }
+  },
+})
+
 
       // Añadir pie de página con fecha de generación
       const pageCount = doc.internal.getNumberOfPages()

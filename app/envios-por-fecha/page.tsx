@@ -23,7 +23,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { debounce } from "lodash"
 import { jsPDF } from "jspdf"
 import autoTable from "jspdf-autotable"
-import XLSX from "xlsx"
+import * as XLSX from "xlsx"
+
 
 // Extended shipment type with client code
 interface ExtendedShipment extends Shipment {
